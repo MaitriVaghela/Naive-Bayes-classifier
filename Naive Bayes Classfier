@@ -1,0 +1,106 @@
+import numpy as np
+from sklearn.datasets import fetch_20newsgroups
+from sklearn.feature_extraction.text import HashingVectorizer
+from sklearn.feature_selection import SelectKBest, chi2
+from sklearn.naive_bayes import MultinomialNB
+from sklearn import metrics
+
+results =[]
+useHashing = True 
+report = True
+
+#Categories to be worked upon (It can be replaced by 4 categories too)
+categories = ['comp.graphics',
+'comp.os.ms-windows.misc',
+'comp.sys.ibm.pc.hardware',
+'comp.sys.mac.hardware',
+'comp.windows.x',
+'misc.forsale',
+'rec.autos',
+'rec.motorcycles',
+'rec.sport.baseball',
+'rec.sport.hockey',
+'talk.politics.misc',
+'talk.politics.guns',
+'talk.politics.mideast',
+'sci.crypt',
+'sci.electronics',
+'sci.med',
+'sci.space',
+'talk.religion.misc',
+'alt.atheism',
+'soc.religion.christian']
+
+
+#characters to be removed while fetching the data set  
+remove = ('headers', 'footers', 'quotes')
+
+#fetching the data set
+newsgroups_train = fetch_20newsgroups(subset='train', categories=categories,
+                                shuffle=True, random_state=42,
+                                remove=remove)
+
+newsgroups_test = fetch_20newsgroups(subset='test', categories=categories,
+                               shuffle=True, random_state=42,
+                               remove=remove)
+
+targetNames = newsgroups_train.target_names
+trainSet = newsgroups_train.target
+testSet = newsgroups_test.target
+
+
+#Features from the training data and test data is being extracted and corpus is converted into a document matrix
+vect = HashingVectorizer( non_negative=True,
+                                   n_features=2 ** 20)
+
+choTrain = vect.transform(newsgroups_train.data)
+
+
+print("===================Average Sparsity of the training data====================")
+try1 = choTrain.getnnz()/choTrain.shape[0]
+try2 = try1 / choTrain.shape[1]
+print(try2)
+
+choTest = vect.transform(newsgroups_test.data)
+print("Vocabulary ",choTrain.shape[1])
+
+
+#if statement is used to handle missing modules 
+if useHashing:
+    featureNames = None
+else:
+  featureNames = vect.get_feature_names()
+
+#Best features are being extracted using chi-squared test
+val = SelectKBest(chi2, k=10)
+choTrain = val.fit_transform(choTrain, trainSet)
+choTest = val.transform(choTest)
+if featureNames:
+      featureNames = [featureNames[i] for i
+                         in val.get_support(indices=True)]
+
+
+#selected features are being framed into an array 
+if featureNames:
+    featureNames = np.asarray(featureNames)
+
+#calculations like accuracy and confusion matrix takes place in this function 
+def processing(para):
+    para.fit(choTrain, trainSet)
+
+    pred = para.predict(choTest)
+
+    #to calculate the accuracy
+    score = metrics.accuracy_score(testSet, pred)
+    print("Accuracy is:",score)
+    
+    #to calculate the confusion matrix
+    print(metrics.confusion_matrix(testSet, pred))
+
+    return score
+
+#multinomialNB is calculated and passed to 'processing' function for further calculations
+results.append(processing(MultinomialNB(alpha= 0.01)))
+print("Results are:")
+print(results)
+
