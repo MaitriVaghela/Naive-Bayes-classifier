@@ -1,0 +1,101 @@
+import matplotlib.pyplot as plt
+import numpy as np
+
+
+#Plotting
+#confusion matrix for 4 categories and alpha = 0.01
+val1 = [[ 66,15,235,   3],
+ [  0, 227, 162,   0],
+ [  2  ,12, 380 ,  0],
+ [ 56  , 2 ,184  , 9]]
+
+#confusion matrix for 20 categories and alpha = 0.01
+val2 =[[  0 ,  0 ,  0 ,  0 ,  1 ,  1 ,  4,   0,   1 ,  0, 237,   0 ,  0 ,  0 ,  4 , 70 ,  0 ,  1,
+    0  , 0],
+ [  0   ,1 , 29,   1 ,  2 ,  8 ,  1 ,  0 ,  0 ,  0 ,325 ,  4 ,  0 ,  3 , 14 ,  0 ,  0,   1,
+    0  , 0],
+ [  0  , 5, 179,   3,   0,  15,   0 ,  0,   0,   0, 188,   0,   0,   0,   4,   0,   0,   0,
+    0  , 0],
+ [  0   ,1 , 32,   4,   0,   3 ,  2 ,  0 ,  0 ,  0, 337,   3,   0,   0 , 10,   0 ,  0 ,  0,
+    0  , 0],
+ [  0  , 0 ,  3 ,  0 ,  0 ,  1 ,  8 ,  1 ,  0,   0 ,360,   4,   0 ,  0 ,  5 ,  3,   0,   0,
+    0  , 0],
+ [  0   ,1 , 47 ,  1 ,  2 , 64 ,  0 ,  0 ,  0 ,  1 ,265 ,  6 ,  0 ,  2 ,  5 ,  0 ,  0 ,  1,
+    0  , 0],
+ [  0   ,0  , 7 ,  1 ,  4 ,  2 ,123 , 12 ,  3 ,  0, 221,   2,   1,   6,   7,   1,   0,   0,
+    0  , 0],
+ [  0   ,0  , 3 ,  0 ,  0 ,  1 ,  5 ,125,   3 ,  0, 253,   1 ,  4 ,  0 ,  1 ,  0,   0,   0,
+    0   ,0],
+ [  0   ,0 ,  0 ,  0 ,  0 ,  0 ,  5 ,  7 ,102 ,  0 ,275 ,  2 ,  0 ,  2 ,  1 ,  4 ,  0 ,  0,
+    0  , 0],
+ [  0   ,0  , 0  , 0  , 0  , 1 ,  1,   1 ,  0 ,  1, 381,   5,   0,   0 ,  3 ,  4 ,  0,   0,
+    0   ,0],
+ [  0   ,0 ,  1,   0,   0,   1,   2,   0,   0,   0, 387,   4,   0,   0 ,  0,   4 ,  0 ,  0,
+    0  , 0],
+ [  0   ,2   ,0  , 0 ,  0,   0,   2,   2,   0,   2, 274, 111,   0,   1,   0,   2,   0,   0,
+    0   ,0],
+ [  0  , 1 ,  4,   1,   0,   1,   3 , 12 ,  1 ,  0, 348,  14,   0,   1 ,  6 ,  1 ,  0,   0,
+    0  , 0],
+ [  0   ,0  , 1 ,  0 ,  0 ,  3 ,  1 ,  0 ,  0 ,  0 ,379 ,  1 ,  0 ,  0 ,  0 , 11,   0 ,  0,
+    0  , 0],
+ [  0   ,1  , 0  , 0  , 0 ,  0 ,  2 ,  1 ,  0,   0, 272,   0,   0,   0 ,116,   2,   0,   0,
+    0  , 0],
+ [  0   ,0  , 1 ,  0 ,  0 ,  1,   0 ,  0  , 0 ,  2 ,219 ,  1 ,  0 ,  0 , 3 ,168,   0,   3,
+    0   ,0],
+ [  0   ,0  , 2 ,  0 ,  0,   3 ,  4 ,  6 ,  0 ,  0 ,332 ,  3 ,  0 ,  0 ,  5 ,  8 ,  0 ,  1,
+    0  , 0],
+ [  0   ,0  , 0  , 0  , 0  , 4  , 1 ,  4 ,  0 ,  1, 269,   1,   0 ,  0,   2,   9,   0,  85,
+    0  , 0],
+ [  0   ,0 ,  3  , 0  , 0  , 1 ,  0 ,  4 ,  0 ,  1 ,292 ,  1,   0,   1 ,  1 ,  6 ,  0 ,  0,
+    0  , 0],
+ [  0   ,0  , 2  , 0  , 0  , 0 ,  0 ,  3 ,  0 ,  1, 188 ,  0 ,  0  , 0 ,  1 , 55 ,  0,   1,
+    0   ,0]]
+
+categories1 = ['alt.atheism', 'talk.religion.misc','comp.graphics', 'sci.space']
+categories2 = ['comp.graphics',
+'comp.os.ms-windows.misc',
+'comp.sys.ibm.pc.hardware',
+'comp.sys.mac.hardware',
+'comp.windows.x',
+'misc.forsale',
+'rec.autos',
+'rec.motorcycles',
+'rec.sport.baseball',
+'rec.sport.hockey',
+'talk.politics.misc',
+'talk.politics.guns',
+'talk.politics.mideast',
+'sci.crypt',
+'sci.electronics',
+'sci.med',
+'sci.space',
+'talk.religion.misc',
+'alt.atheism',
+'soc.religion.christian']
+
+#extracting the diagonal values from the confusion matrices
+diag1 = np.diagonal(val1)
+diag2 = np.diagonal(val2)
+# Get current size of the figure
+fig_size = plt.rcParams["figure.figsize"]
+# Set figure width to 60 and height to 9
+fig_size[0] = 60
+fig_size[1] = 9
+plt.rcParams["figure.figsize"] = fig_size
+fig_size = plt.rcParams["figure.figsize"]
+
+plt.bar(categories2,diag2,width = 0.5)
+plt.savefig('Confusion Matrix for 20 categories')
+plt.show() 
+
+
+# Get current size of the figure
+fig_size = plt.rcParams["figure.figsize"]
+# Set figure width to 30 and height to 9
+fig_size[0] = 30
+fig_size[1] = 9
+plt.rcParams["figure.figsize"] = fig_size
+fig_size = plt.rcParams["figure.figsize"]
+plt.bar(categories1,diag1,width = 0.5)
+plt.savefig('Confusion Matrix for 4 categories')
+plt.show()
